@@ -1,0 +1,50 @@
+import kotlin.math.roundToInt
+
+fun main() {
+    val payMethod = "Mastercard" //тип перевода
+    val monthAmount = 25_000 //сумма переводов указнного типа за календарный месяц
+    val dayAmount = 0 //сумма переводов указнного типа за сутки
+    val amount = 75_000 //сумма перевода в рублях
+
+    // Лимиты по операциям
+    val sumDayLimit = 150_000
+    val sumMonthLimit = 600_000
+
+    if (amount + dayAmount > sumDayLimit || amount + monthAmount > sumMonthLimit) {
+        println("Превышение лимитов - операция заблокирована.")
+    } else {
+        println("Комиссия за перевод составит: ${diffCommission(payMethod, monthAmount, amount)} руб.")
+    }
+}
+
+/*   Функция дифференцированного расчета комиссии за перевод
+Комиссия:
+* За переводы с карты Mastercard комиссия не взимается, пока не превышен месячный лимит в 75 000 руб.
+Если лимит превышен, комиссия составит 0,6% + 20 руб.
+* За переводы с карты Visa комиссия составит 0,75%, минимальная сумма комиссии 35 руб.
+* За переводы с карты Мир комиссия не взимается.
+Комиссия в лимитах не учитывается.
+ */
+fun diffCommission(
+    typeOfPay: String = "Мир",
+    monthAmount: Int = 0,
+    amount: Int
+): Double {
+    val monthFreeLim = 75_000
+    val sumOfTrans = monthAmount + amount
+
+    return when {
+        typeOfPay == "Mastercard" && sumOfTrans > monthFreeLim
+            -> (((if (monthAmount < monthFreeLim) sumOfTrans - monthFreeLim else amount)
+                * 100 * 0.006).roundToInt() + 20 * 100).toDouble() / 100
+
+//            -> if (monthAmount < monthFreeLim)
+//                (((sumOfTrans - monthFreeLim) * 100 * 0.006).roundToInt() + 20 * 100).toDouble() / 100
+//                else ((amount * 100 * 0.006).roundToInt() + 20 * 100).toDouble() / 100
+
+        typeOfPay == "Мир" || (typeOfPay == "Mastercard" && sumOfTrans <= monthFreeLim) -> 0.0
+
+        else -> maxOf((amount * 100 * 0.0075).roundToInt(), 35 * 100).toDouble() / 100
+        //При расчете выполняется перевод суммы в копейки, вычисление комиссии в копейках, перевод результата в рубли
+    }
+}
