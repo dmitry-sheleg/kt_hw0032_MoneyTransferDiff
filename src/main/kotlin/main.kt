@@ -38,10 +38,6 @@ fun diffCommission(
             -> (((if (monthAmount < monthFreeLim) sumOfTrans - monthFreeLim else amount)
                 * 100 * 0.006).roundToInt() + 20 * 100).toDouble() / 100
 
-//            -> if (monthAmount < monthFreeLim)
-//                (((sumOfTrans - monthFreeLim) * 100 * 0.006).roundToInt() + 20 * 100).toDouble() / 100
-//                else ((amount * 100 * 0.006).roundToInt() + 20 * 100).toDouble() / 100
-
         typeOfPay == "Мир" || (typeOfPay == "Mastercard" && sumOfTrans <= monthFreeLim) -> 0.0
 
         else -> maxOf((amount * 100 * 0.0075).roundToInt(), 35 * 100).toDouble() / 100
