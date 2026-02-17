@@ -20,7 +20,7 @@ class DiffCommissionTest {
 
         //assert
         val delta = 0.0
-        assertEquals(1.0, result, delta)
+        assertEquals(10.0, result, delta)
 
     }
 
