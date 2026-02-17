@@ -8,11 +8,6 @@ fun main() {
     val dayAmount = 0 //сумма переводов указанного типа за сутки
     val amount = 75_000 //сумма перевода в рублях
 
-//    if (amount + dayAmount > sumDayLimit || amount + monthAmount > sumMonthLimit) {
-//        println("Превышение лимитов - операция заблокирована.")
-//    } else {
-//        println("Комиссия за перевод составит: ${diffCommissionMaster(payMethod, monthAmount, amount)} руб.")
-//    }
     println(
         transferMessage(
             dayAmount, monthAmount, amount,
