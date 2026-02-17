@@ -1,20 +1,24 @@
+package ru.netology
+
 import kotlin.math.roundToInt
 
 fun main() {
     val payMethod = "Mastercard" //тип перевода
-    val monthAmount = 25_000 //сумма переводов указнного типа за календарный месяц
-    val dayAmount = 0 //сумма переводов указнного типа за сутки
+    val monthAmount = 25_000 //сумма переводов указанного типа за календарный месяц
+    val dayAmount = 0 //сумма переводов указанного типа за сутки
     val amount = 75_000 //сумма перевода в рублях
 
-    // Лимиты по операциям
-    val sumDayLimit = 150_000
-    val sumMonthLimit = 600_000
-
-    if (amount + dayAmount > sumDayLimit || amount + monthAmount > sumMonthLimit) {
-        println("Превышение лимитов - операция заблокирована.")
-    } else {
-        println("Комиссия за перевод составит: ${diffCommission(payMethod, monthAmount, amount)} руб.")
-    }
+//    if (amount + dayAmount > sumDayLimit || amount + monthAmount > sumMonthLimit) {
+//        println("Превышение лимитов - операция заблокирована.")
+//    } else {
+//        println("Комиссия за перевод составит: ${diffCommissionMaster(payMethod, monthAmount, amount)} руб.")
+//    }
+    println(
+        transferMessage(
+            dayAmount, monthAmount, amount,
+            diffCommissionMaster(payMethod, monthAmount, amount)
+        )
+    )
 }
 
 /*   Функция дифференцированного расчета комиссии за перевод
@@ -25,7 +29,7 @@ fun main() {
 * За переводы с карты Мир комиссия не взимается.
 Комиссия в лимитах не учитывается.
  */
-fun diffCommission(
+fun diffCommissionMaster(
     typeOfPay: String = "Мир",
     monthAmount: Int = 0,
     amount: Int
@@ -42,5 +46,23 @@ fun diffCommission(
 
         else -> maxOf((amount * 100 * 0.0075).roundToInt(), 35 * 100).toDouble() / 100
         //При расчете выполняется перевод суммы в копейки, вычисление комиссии в копейках, перевод результата в рубли
+    }
+}
+
+fun transferMessage(
+    dayAmount: Int,
+    monthAmount: Int,
+    amount: Int,
+    commission: Double
+): String {
+// Лимиты по операциям
+    val dayLimit = 150_000
+    val monthLimit = 600_000
+
+    return when {
+        (amount + dayAmount) > dayLimit ||
+                (amount + monthAmount) > monthLimit -> "Превышение лимитов - операция заблокирована."
+
+        else -> "Комиссия за перевод составит: $commission руб."
     }
 }
